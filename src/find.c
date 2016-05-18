@@ -1,9 +1,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#define MAXLINE 100
 
-int getline2(char *line, int max);
+#include "libgetline2.h"
+
+#define MAXLINE 100
 
 int main(int argc, char *argv[]){
   char line[MAXLINE];
@@ -42,19 +43,4 @@ int main(int argc, char *argv[]){
     }
   }
   return found;
-}
-
-int getline2(char *s, int lim){
-  int c,i;
-
-  for(i=0; i<lim-1 && (c=getchar()) != EOF && c!= '\n'; i++){
-    *(s+i)=c;
-  }
-
-  if(c == '\n'){
-    *(s+i)='\0';
-    ++i;
-  }
-
-  return i;
 }

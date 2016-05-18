@@ -2,12 +2,9 @@
 #include<stdlib.h>
 #include<string.h>
 #include<ctype.h>
+#include "libgetch.h"
 
 #define MAXWORD 100
-
-#define BUFSIZE 100
-char buf[BUFSIZE]; // buffer for ungetch
-int bufp = 0; // next free position in buf
 
 struct key {
   char* word;
@@ -30,8 +27,6 @@ struct key {
 
 int getword(char *, int);
 int binsearch(char *, struct key *, int);
-int getch(void);
-void ungetch(int);
 
 int main(int argc, char **argv){
 
@@ -104,18 +99,6 @@ int getword(char *word, int lim){
 
   *w = '\0';
   return word[0];
-}
-
-int getch(void){
-  return (bufp > 0) ? buf[--bufp] : getchar();
-}
-
-void ungetch(int c){
-  if(bufp >= BUFSIZE){
-    printf("ungetch: too many characters in buffer\n");
-  } else {
-    buf[bufp++] = c;
-  }
 }
 
 // TODO: properly handle _, string constants, comments, preprocessor lines

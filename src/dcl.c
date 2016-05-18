@@ -1,12 +1,9 @@
 #include<stdio.h>
 #include<string.h>
 #include<ctype.h>
+#include "libgetch.h"
 
 #define MAXTOKEN 100
-#define BUFSIZE 100
-
-char buf[BUFSIZE]; // buffer for ungetch
-int bufp = 0; // next free position in buf
 
 enum { NAME, PARENS, BRACKETS };
 
@@ -24,22 +21,29 @@ int main(){
   int undcl=1;
 
   if(undcl){
-    int type;
+    int type, lastType;
     char temp[MAXTOKEN];
 
     while(gettoken() != EOF){ // x () * [] * () char
       strcpy(out, token);
-      while((type = gettoken()) != '\n')
-        if(type == PARENS || type == BRACKETS)
+      while((type = gettoken()) != '\n') {
+        if(type == PARENS || type == BRACKETS){
+          if(lastType == '*') {
+            sprintf(temp, "(%s)", out);
+            strcpy(out, temp);
+          }
           strcat(out, token);
+        }
         else if(type == '*'){
-          sprintf(temp, "(*%s)", out);
+          sprintf(temp, "*%s", out);
           strcpy(out, temp);
         } else if(type == NAME){ // it must end with the type
           sprintf(temp, "%s %s", token, out);
           strcpy(out, temp);
         } else 
           printf("invalid input at %s\n", token);
+        lastType = type;
+      }
       printf("%s\n", out);
     }
   } else{ // char (*(*x())[])()
@@ -50,8 +54,9 @@ int main(){
       out[0] = '\0';
       dcl(); // parse rest of the line
       if(tokentype != '\n')
-        printf("syntax error : %c\n", tokentype);
-      printf("%s : %s %s\n", name, out, datatype);
+        printf("syntax error\n");
+      else
+        printf("%s : %s %s\n", name, out, datatype);
     }
   }
 
@@ -60,8 +65,7 @@ int main(){
 
 int gettoken(void){ // token: name, pair of parenthesis, pair of brackets with possible number, any single caracter
   char *p = token;
-  int c, getch(void);
-  void ungetch(int);
+  int c;
 
   while((c = getch()) == ' ' || c == '\t')
     ;
@@ -75,9 +79,15 @@ int gettoken(void){ // token: name, pair of parenthesis, pair of brackets with p
       return tokentype = '(';
     }
   } else if(c == '['){
-    for(*p++=c; (*p++ = getch()) != ']'; )
-      ;
-    *p = '\0';
+    *p++ = c;
+    while((*p = getch()) != ']'){
+      if(!isdigit(*p)){
+        printf("error: only numbers can be inside brackets\n");
+        return;      
+      }
+      p++;
+    }
+    *++p = '\0';
     return tokentype = BRACKETS;
   } else if(isalpha(c)){
     for(*p++ = c; isalnum(c = getch()); )
@@ -87,18 +97,6 @@ int gettoken(void){ // token: name, pair of parenthesis, pair of brackets with p
     return tokentype = NAME;
   } else
     return tokentype = c;
-}
-
-int getch(void){
-  return (bufp > 0) ? buf[--bufp] : getchar();
-}
-
-void ungetch(int c){
-  if(bufp >= BUFSIZE){
-    printf("ungetch: too many characters in buffer\n");
-  } else {
-    buf[bufp++] = c;
-  }
 }
 
 void dcl(void){
@@ -123,18 +121,23 @@ void dirdcl(void){
   else
     printf("error: expected name or (dcl)\n");
 
-  while((type = gettoken()) == PARENS || type == BRACKETS)
+  while((type = gettoken()) == PARENS || type == BRACKETS || type == '(')
     if(type == PARENS)
-      strcat(out, " function returning ");
-    else {
+      strcat(out, " function() returning ");
+    else if(type == BRACKETS) {
       strcat(out, " array ");
       strcat(out, token);
       strcat(out, " of ");
+    } else {
+      strcat(out, " function(");
+      while((type = gettoken()) == NAME || type == ','){
+        if(type == NAME)
+          strcat(out, token);
+        else
+          strcat(out, ", ");
+      }
+      if(type != ')')
+        printf("error: function declaration must end with )\n");
+      strcat(out, ")  returning ");
     }
 }
-
-/*
- * 1) add arguments type in function
- * 3) error recovery : exemple [a]
- * 4) modify undcl to not add redundant parentheses
- */

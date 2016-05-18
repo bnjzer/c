@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include "libgetline2.h"
 
 #define MAXLINES 100
 #define MAXLEN 1000
@@ -43,8 +44,6 @@ int main(int argc, char *argv[]){
   }
 }
 
-int getline2(char*, int);
-
 int readlines(char *lineptr[], char lines[], int maxlines){
   int len, totalLength, nlines;
   char *p;
@@ -61,21 +60,6 @@ int readlines(char *lineptr[], char lines[], int maxlines){
     }
   }
   return nlines;
-}
-
-int getline2(char *s, int lim){
-  int c,i;
-
-  for(i=0; i<lim-1 && (c=getchar()) != EOF && c!= '\n'; i++){
-    *(s+i)=c;
-  }
-
-  if(c == '\n'){
-    *(s+i)='\0';
-    ++i;
-  }
-
-  return i;
 }
 
 void swap (void *v[], int i, int j);
