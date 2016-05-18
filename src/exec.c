@@ -5,10 +5,17 @@
 #include<sys/wait.h>
 
 int main(void){
-  pid_t pid = fork();
-
   int exitStatus;
   int status;
+
+  int i,j;
+
+  printf("Donnez la valeur de i : ");
+  scanf("%d", &i);
+  printf("Donnez la valeur de j : ");
+  scanf("%d", &j);
+
+  pid_t pid = fork();
 
   switch(pid){
     case -1:
@@ -17,6 +24,10 @@ int main(void){
       break;
     case 0:
       printf("I'm the son, my PID is %d and my father PID is %d\n", getpid(), getppid());
+      char conv1[10], conv2[10];
+      sprintf(conv1, "%d", i);
+      sprintf(conv2, "%d", j);
+      execl("./bin/calculer", "Calcul", conv1, conv2, NULL);
       exitStatus = EXIT_SUCCESS;
       break;
     default:

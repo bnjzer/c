@@ -36,6 +36,12 @@ $(BINDIR)/pcalendar: $(SRCDIR)/pcalendar.c
 $(BINDIR)/fork: $(SRCDIR)/fork.c
 	$(GCC) $(CFLAGS) -o $@ $^
 
+$(BINDIR)/exec: $(SRCDIR)/exec.c
+	$(GCC) $(CFLAGS) -o $@ $^
+
+$(BINDIR)/calculer: $(SRCDIR)/calculer.c
+	$(GCC) $(CFLAGS) -o $@ $^
+
 # libraries
 
 $(LIBDIR)/libgetch.a: $(SRCDIR)/libgetch.c

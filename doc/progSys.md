@@ -85,6 +85,7 @@ system V => /etc/inittab
 `pid_t waitpid(pid_t pid, int *status, int options)`
 `void exit(int status)`
 les 6 primitives de recouvrement permettent à un processus de charger en mémoire un nouveau code exécutable : `man 3 exec`
+le code exécuté remplace l'ancien code sur le même PID
 `main(   char **arge[])`: liste de pointeurs permettant d'accéder à l'environnement d'exécution du processus
 
 
