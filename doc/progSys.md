@@ -5,21 +5,20 @@ Unix/Linux programmation avancée
 Pour installer GCC : `apt-get install build-essential` || `yum groupinstall "Development tools"`
 
 4 étapes de la "compilation" :
-1) **preprocessing** : `gcc -E compil.c > compil.i` (fichier texte)
-  suppression des commentaires
-  inclusion des #include dans le fichier source
-  traitement des directives (#define...)
-  `-Wall` pour afficher les warnings, qui par défaut ne s'affichent pas
-2) **compilation** : transformation en assembleur : `gcc -S compil.i`
-3) **assembling** : transformation du code assembleur en code machine binaire : `gcc -c compil.s` || `as -o compil.o compil.o`
-  `od -x compil.o` pour voir le contenu binaire || `objdump -t compil.o`
-4) **linking** : après assembling, le code est incomplet, il n'a pas l'implémentation de toutes les fonctions (exemple printf, dont le code est dans une bibliothèque)
-  l'édition des liens va réunir le fichier objet et les fonctions contenues dans les bibliothèques, pour produire l'exécutable complet
+1. **preprocessing** : `gcc -E compil.c > compil.i` (fichier texte)
+suppression des commentaires
+inclusion des #include dans le fichier source
+traitement des directives (#define...)
+`-Wall` pour afficher les warnings, qui par défaut ne s'affichent pas
+2. **compilation** : transformation en assembleur : `gcc -S compil.i`
+3. **assembling** : transformation du code assembleur en code machine binaire : `gcc -c compil.s` || `as -o compil.o compil.o`
+`od -x compil.o` pour voir le contenu binaire || `objdump -t compil.o`
+4. **linking** : après assembling, le code est incomplet, il n'a pas l'implémentation de toutes les fonctions (exemple printf, dont le code est dans une bibliothèque)
+l'édition des liens va réunir le fichier objet et les fonctions contenues dans les bibliothèques, pour produire l'exécutable complet
 
 # Bibliothèques dynamiques et statiques
 
 bibliothèque standard : glibc. Elle contient 24 en-têtes
-bibliothèques externes
 
 ## Bibliothèques statiques (.a)
 
@@ -60,6 +59,8 @@ tous les drivers sont des modules
 
 # Processus, threads et ordonnancement
 
+## Processus
+
 processus : programme en cours d'exécution auquel est associé un environnement processeur (compteur ordinal, registre d'état, registres généraux) et un environnemnt mémoire appelés contexte du processus
 il évolue dans un espace d'adressage protégé
 32 bits (64 aussi) : espace d'adressage virtuel de 2^32 = 4 GB
@@ -88,6 +89,42 @@ les 6 primitives de recouvrement permettent à un processus de charger en mémoi
 le code exécuté remplace l'ancien code sur le même PID
 `main(   char **arge[])`: liste de pointeurs permettant d'accéder à l'environnement d'exécution du processus
 
+## Threads
+
+Un processus est constitué d'un espace d'adressage avec un seul fil d'exécution  
+L'extension consiste à admettre plusieurs fils d'exécution indépendants dans un même espace d'adressage
+threads caractérisés par une valeur de compteur ordinal propre et une pile d'exécution privée
+l'entité contenant les différents fils d'exécutions est appelée processus
+thread: processus léger
+dans un CPU le compteur ordinal est le registre qui contient l'adresse mémoire de l'instruction en cours d'exécution. Une fois l'instruction chargée, il est automatiquement incrémentée pour pointer l'instruction suivante
+
+les ressources sont partagées par tous les fils d'exécution
+avantage: allègement des opérations de changement de contexte
+création d'un nouveau fil d'exécution allégée puisque pas besoin de créer nouvel espace d'adressage
+- : problème de partage des ressources plus important
+
+threads niveau utilisateur (cercle 3) : le noyau Linux les ignore, il ordonnance des processus classiques composés d'un seul fil d'exécution
+la bibliothèque système (POSIX Threads ou pthreads) gère l'interface avec le noyau en prenant en charge la gestion des threads à ce dernier. Elle est donc responsable de commuter les threads au sein d'un même processus
++: allège les commutations entre les threads d'un meême processus car cela se faiut au niveau utilisateur et pas au niveau noyau
+-: au sein d'un processus, un thread peut monopoliser le processeur pour lui tout seul. Un thread bloqué au sein d'un processus bloque l'ensemble des threads de ce processus
+
+threads niveau noyau: le noyau connaît l'existence des threads au sein d'un processus et attribue le processeur à chacun des threads de manière indépendante
+-: commutation
++: un thread en bloque pas un autre
+
+
+### en C
+
+bibliothèque Linux Threads, pas dans la glibc `#include "pthread.h"`, `-lpthreads` lors du linking. Thread de type `pthread_t`. `pthread_self()` pour connaître son identité
+`pthread_create()` : créer un Thread au sein du processus
+`pthread_exit()` : met fin au thread
+`pthread_join()` : jointure entre 2 threads. Attente que l'autre se termine
+
+attributs d'un thread:
+* adresse de départ et taile de la pile
+* politique d'ordonnancement
+* priorité
+* attachement ou détachement (un thread détaché se termine immédiatement sans pouvoir être pris en compte par la primitive `pthread_join()`
 
 # sysadmin tips
 
@@ -105,3 +142,4 @@ le code exécuté remplace l'ancien code sur le même PID
 * lorsqu'on fait un `ps aux` les noms entre crochets sont des processus du noyau
 * faire planter le système : `:(){:|:&};:`
 * `jobs -l` pour voir les PID. `fg 1` pour le remettre en premier plan
+
