@@ -11,8 +11,8 @@ char *linesptr[MAXLINES];
 int readlines(char *lineptr[], char lines[], int maxlines);
 void writelines(char *lineptr[], int nlines, char reversed);
 
-void qsort2(void *linesptr[], int left, int right, int (*comp)(void *, void *));
-int numcmp(char *, char *);
+void qsort2(void *linesptr[], int left, int right, int (*comp)(const char *, const char *));
+int numcmp(const char *, const char *);
 
 int main(int argc, char *argv[]){
   char numeric = 0;
@@ -46,7 +46,6 @@ int main(int argc, char *argv[]){
 
 int readlines(char *lineptr[], char lines[], int maxlines){
   int len, totalLength, nlines;
-  char *p;
 
   nlines = 0;
   totalLength=0;
@@ -64,7 +63,7 @@ int readlines(char *lineptr[], char lines[], int maxlines){
 
 void swap (void *v[], int i, int j);
 
-void qsort2(void *linesptr[], int left, int right, int (*comp)(void *, void *)){
+void qsort2(void *linesptr[], int left, int right, int (*comp)(const char *, const char *)){
   int i,indPivot;
 
   if(left >= right)
@@ -89,7 +88,7 @@ void swap (void *v[], int i, int j){
   v[j]=temp;
 }
 
-int numcmp(char *s1, char *s2){
+int numcmp(const char *s1, const char *s2){
   double v1, v2;
 
   v1 = atof(s1);

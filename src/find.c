@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
   long lineno=0;
   
   while(--argc > 0 && (*++argv)[0] == '-'){
-    while(c = *++argv[0]){
+    while((c = *++argv[0])){
       switch(c){
         case 'x':
           except = 1;

@@ -37,5 +37,6 @@ int main(){
 
   month_day(2016, 60, &month, &day, daytab);
   printf("%d/%d\n", day, month);
-
+  
+  return 0;
 }

@@ -47,8 +47,6 @@ int main(){
       printf("%s\n", out);
     }
   } else{ // char (*(*x())[])()
-    int c;
-
     while(gettoken() != EOF){
       strcpy(datatype, token); // 1st token on the line is the datatype
       out[0] = '\0';
@@ -83,7 +81,7 @@ int gettoken(void){ // token: name, pair of parenthesis, pair of brackets with p
     while((*p = getch()) != ']'){
       if(!isdigit(*p)){
         printf("error: only numbers can be inside brackets\n");
-        return;      
+        return -1;      
       }
       p++;
     }

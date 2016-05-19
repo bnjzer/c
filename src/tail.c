@@ -8,7 +8,7 @@
 #define MAXLINE 100
 
 int main(int argc, char *argv[]){
-  int c, tail = 0;
+  int tail = 0;
   int nbLines = 0;
 
   if(argc != 1 && argc != 3){

@@ -59,6 +59,8 @@ tous les drivers sont des modules
 
 # Processus, threads et ordonnancement
 
+Le processus classique est un processus lourd
+
 ## Processus
 
 processus : programme en cours d'exécution auquel est associé un environnement processeur (compteur ordinal, registre d'état, registres généraux) et un environnemnt mémoire appelés contexte du processus

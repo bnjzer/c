@@ -10,17 +10,17 @@ struct key {
   char* word;
   int count;
 } keytab[] = {
-  "char", 0,
-  "define", 0,
-  "else", 0,
-  "if", 0,
-  "include", 0,
-  "int", 0,
-  "for", 0,
-  "return", 0,
-  "size_t", 0,
-  "struct", 0,
-  "while", 0
+  {"char", 0},
+  {"define", 0},
+  {"else", 0},
+  {"if", 0},
+  {"include", 0},
+  {"int", 0},
+  {"for", 0},
+  {"return", 0},
+  {"size_t", 0},
+  {"struct", 0},
+  {"while", 0}
 };
 
 #define NKEYS (sizeof keytab/sizeof keytab[0])
@@ -47,8 +47,8 @@ int main(int argc, char **argv){
   
   size_t sizeInt = sizeof(int); 
   size_t sizeChar = sizeof(char);
-  printf("size of int : %d\n", sizeInt);
-  printf("size of char : %d\n", sizeChar);
+  printf("size of int : %ld\n", sizeInt);
+  printf("size of char : %ld\n", sizeChar);
 
   return 0;
 }

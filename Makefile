@@ -1,6 +1,6 @@
 GCC=gcc
 AR=ar rcs
-CFLAGS=-Wall -pedantic
+CFLAGS=-Wall
 
 SRCDIR=src
 INCLUDEDIR=inc
@@ -23,6 +23,9 @@ $(BINDIR)/find: $(SRCDIR)/find.c $(LIBDIR)/libgetline2.a
 
 $(BINDIR)/tail: $(SRCDIR)/tail.c $(LIBDIR)/libgetline2.a
 	$(GCC) $(CFLAGS) -o $@ $^ -I $(INCLUDEDIR)
+
+$(BINDIR)/threads: $(SRCDIR)/threads.c
+	$(GCC) $(CFLAGS) -o $@ $^ -lpthread -I /usr/include
 
 $(BINDIR)/args: $(SRCDIR)/args.c
 	$(GCC) $(CFLAGS) -o $@ $^
