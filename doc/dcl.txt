@@ -1,7 +1,0 @@
-dcl: optional *'s direct-dcl
-
-direct-dcl: name
-            (dcl)
-            direct-dcl()
-            direct-dcl[optional size]
-

@@ -1,3 +1,12 @@
+/*
+dcl: optional *'s direct-dcl
+
+direct-dcl: name
+            (dcl)
+            direct-dcl()
+            direct-dcl[optional size]
+ */
+
 #include<stdio.h>
 #include<string.h>
 #include<ctype.h>

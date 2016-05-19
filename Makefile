@@ -7,6 +7,8 @@ INCLUDEDIR=inc
 LIBDIR=lib
 BINDIR=bin
 
+all: $(BINDIR)/args $(BINDIR)/calculer $(BINDIR)/calendar $(BINDIR)/dcl $(BINDIR)/exec $(BINDIR)/find $(BINDIR)/fork $(BINDIR)/parsec $(BINDIR)/pcalendar $(BINDIR)/procs $(BINDIR)/sort $(BINDIR)/tail $(BINDIR)/threads $(BINDIR)/zombie $(BINDIR)/ordo
+
 # binaries
 
 $(BINDIR)/parsec: $(SRCDIR)/parsec.c $(LIBDIR)/libgetch.a 
@@ -26,6 +28,15 @@ $(BINDIR)/tail: $(SRCDIR)/tail.c $(LIBDIR)/libgetline2.a
 
 $(BINDIR)/threads: $(SRCDIR)/threads.c
 	$(GCC) $(CFLAGS) -o $@ $^ -lpthread -I /usr/include
+
+$(BINDIR)/ordo: $(SRCDIR)/ordo.c
+	$(GCC) $(CFLAGS) -o $@ $^ 
+
+$(BINDIR)/procs: $(SRCDIR)/procs.c
+	$(GCC) $(CFLAGS) -o $@ $^ 
+
+$(BINDIR)/zombie: $(SRCDIR)/zombie.c
+	$(GCC) $(CFLAGS) -o $@ $^ 
 
 $(BINDIR)/args: $(SRCDIR)/args.c
 	$(GCC) $(CFLAGS) -o $@ $^

@@ -34,6 +34,7 @@ int main(int argc, char **argv){
   printf("processus: i is %d\n", i);
 
   pthread_join(thread, NULL);
+
   /*pthread_t thread1, thread2;; 
   char *msg1 = "ooonnneeee";
   char *msg2 = "tttwwwooo";
