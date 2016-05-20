@@ -7,7 +7,7 @@ INCLUDEDIR=inc
 LIBDIR=lib
 BINDIR=bin
 
-all: $(BINDIR)/args $(BINDIR)/calculer $(BINDIR)/calendar $(BINDIR)/dcl $(BINDIR)/exec $(BINDIR)/find $(BINDIR)/fork $(BINDIR)/parsec $(BINDIR)/pcalendar $(BINDIR)/procs $(BINDIR)/sort $(BINDIR)/tail $(BINDIR)/threads $(BINDIR)/zombie $(BINDIR)/ordo $(BINDIR)/files $(BINDIR)/dir
+all: $(BINDIR)/args $(BINDIR)/calculer $(BINDIR)/calendar $(BINDIR)/dcl $(BINDIR)/exec $(BINDIR)/find $(BINDIR)/fork $(BINDIR)/parsec $(BINDIR)/pcalendar $(BINDIR)/procs $(BINDIR)/sort $(BINDIR)/tail $(BINDIR)/threads $(BINDIR)/zombie $(BINDIR)/ordo $(BINDIR)/files $(BINDIR)/dir $(BINDIR)/ipc $(BINDIR)/ipc2ways $(BINDIR)/namedpipe1 $(BINDIR)/namedpipe2
 
 # binaries
 
@@ -28,6 +28,18 @@ $(BINDIR)/tail: $(SRCDIR)/tail.c $(LIBDIR)/libgetline2.a
 
 $(BINDIR)/threads: $(SRCDIR)/threads.c
 	$(GCC) $(CFLAGS) -o $@ $^ -lpthread -I /usr/include
+
+$(BINDIR)/ipc2ways: $(SRCDIR)/ipc2ways.c
+	$(GCC) $(CFLAGS) -o $@ $^ 
+
+$(BINDIR)/namedpipe2: $(SRCDIR)/namedpipe2.c
+	$(GCC) $(CFLAGS) -o $@ $^ 
+
+$(BINDIR)/namedpipe1: $(SRCDIR)/namedpipe1.c
+	$(GCC) $(CFLAGS) -o $@ $^ 
+
+$(BINDIR)/ipc: $(SRCDIR)/ipc.c
+	$(GCC) $(CFLAGS) -o $@ $^ 
 
 $(BINDIR)/dir: $(SRCDIR)/dir.c
 	$(GCC) $(CFLAGS) -o $@ $^ 

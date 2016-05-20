@@ -43,7 +43,7 @@ compiler le binaire utilisant la lib : `gcc -L./lib ficmain.c -o ficmain -lfic`
 pour connaître les bibliothèques qu'utilise un binaire : `ldd`  
 pour connaître les fonctions d'une lib : `objdump -T lib.so`
 
-### 2.3) Language C
+### 2.3) C
 
 * `return EXIT_SUCCESS`
 * `#include<>` va chercher dans `/usr/include`, `#include ""` prend dans le répertoire actuel
@@ -60,10 +60,7 @@ tous les drivers sont des modules
 
 ### 4.1) Processus
 
-Le processus classique est un processus lourd
-
-instance d'un programme exécutable
-processus : programme en cours d'exécution auquel est associé un environnement processeur (compteur ordinal, registre d'état, registres généraux) et un environnemnt mémoire appelés contexte du processus
+processus : instance d'un programme exécutable auquel est associé un environnement processeur (compteur ordinal, registre d'état, registres généraux) et un environnemnt mémoire appelés contexte du processus
 il évolue dans un espace d'adressage protégé
 32 bits (64 aussi) : espace d'adressage virtuel de 2^32 = 4 GB
 PAE : on peut dépasser cette limite
@@ -71,13 +68,16 @@ mais en 64 bits le plan d'adressage peut varier
 sur un 32 bits 3 Gio affectés à l'application et 1 Gio à l'OS
 sur un 64 bits la totalité des 4 Gio est affectée à l'espace utilisateur
 valeur (inatteignable) max du PID : 32768 (`/proc/sys/kernel/pid_max`)
-un processus a un **état** :
-  * prêt
-  * élu (par l'ordonnanceur)
-  * bloqué (attente de ressources, par exemple input utilisateur)
-zombie : exécution terminée mais le PCB du processus existe toujours du fait que son père n'a pas pris en compte sa terminaison
+un processus a un **état** :  
+* prêt  
+* élu (par l'ordonnanceur)  
+* bloqué (attente de ressources, par exemple input utilisateur)  
+
+**zombie**
 processus qui a terminé son exécution et attend la prise en compte de cette fin par son père
+le PCB du processus existe toujours du fait que son père n'a pas pris en compte sa terminaison  
 Pour tuer un zombie il est nécessaire de tuer son père, le zombie est alors automatiquement rattaché au processus n°1 (init) qui s'occupera de le tuer.
+
 le noyau a un chargeur qui a pour rôle de monter en mémoire centrale le code et les données du programme à exécuter
 en même temps que ce chargement Linux crée une structure de description du processus associé au programme exécutable : le PCB (Process Control Block) `struct task_struct` dans `sched.h`
 tout processus peut créer un autre processus
@@ -102,6 +102,8 @@ threads caractérisés par une valeur de compteur ordinal propre et une pile d'e
 l'entité contenant les différents fils d'exécutions est appelée processus
 thread: processus léger
 dans un CPU le compteur ordinal est le registre qui contient l'adresse mémoire de l'instruction en cours d'exécution. Une fois l'instruction chargée, il est automatiquement incrémentée pour pointer l'instruction suivante
+
+thread = processus léger (!= processus classique qui est un processus lourd)
 
 les ressources sont partagées par tous les fils d'exécution
 avantage: allègement des opérations de changement de contexte
@@ -162,7 +164,7 @@ si échec, retourne -1 et errno prend certaines valeurs
 
 ## 5)  Système de gestion de fichiers
 
-Les fichiers sont typéstypes de fichier:
+Les fichiers sont typés sur Linux:
 ll : ^p : pipe pour communiquer
      ^s : socket
 `ifconfig`: obsolete => `ip addr`
@@ -175,9 +177,27 @@ FS journalisé : avant de modifier les tables système, le pilote écrit sur dis
 
 quel que soit le système de fichier c'est les mêmes primitives, grâce à VFS
 
-# Communication inter-processus : via pipe
+`/proc` : pseudo système de fichier procfs
+il est dynamiquement mis à jour par le noyau et disparaît à l'extinction du système
+état du système "logique" (processus, applications)
 
-## sysadmin tips
+`/sys` : sysfs
+état des périphériques et du matériel, comme les drivers par exemple
+
+`/proc` et `/sys` sont entièrement en RAM
+
+`/proc/sys/kernel` : paramètres du noyau
+on peut modifier `/proc` à chaud et c'est pris en compte directement par le noyau (sinon sysctl)
+
+## 6) Communication inter-processus via les tubes
+
+tube = tuyau dans lequel un processus peut écrire des données qu'un autre processus peut lire
+communication unidirectionnelle dans le tube
+tube anonyme != tube nommé
+
+c'ets le premier processus qui écrit dans le tube via write qui fixe la direction du flux
+
+## 7) sysadmin tips
 
 * `useradd` : binaire natif, `adduser` : script perl qui utilise useradd, plus user-friendly
 * sur Linux y a toujours un fichier dans /etc qui contient le mot release, pour connaître la version => `cat /etc/*release*`
@@ -197,3 +217,5 @@ quel que soit le système de fichier c'est les mêmes primitives, grâce à VFS
 ## References
 
 * [Advanced Linux Programming](http://advancedlinuxprogramming.com/alp-folder/)
+* [RedHat documentation](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html)
+
