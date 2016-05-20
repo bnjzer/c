@@ -160,7 +160,7 @@ si échec, retourne -1 et errno prend certaines valeurs
 `int nice(int inc)` : modifie la politesse du processus (colonne NI dans top)
 `int getpriority()` et `int setpriority()` permettent de lire et écrire la priorité d'un processus
 
-### 5)  Système de gestion de fichiers
+## 5)  Système de gestion de fichiers
 
 Les fichiers sont typéstypes de fichier:
 ll : ^p : pipe pour communiquer
@@ -177,7 +177,7 @@ quel que soit le système de fichier c'est les mêmes primitives, grâce à VFS
 
 # Communication inter-processus : via pipe
 
-# sysadmin tips
+## sysadmin tips
 
 * `useradd` : binaire natif, `adduser` : script perl qui utilise useradd, plus user-friendly
 * sur Linux y a toujours un fichier dans /etc qui contient le mot release, pour connaître la version => `cat /etc/*release*`
@@ -194,3 +194,6 @@ quel que soit le système de fichier c'est les mêmes primitives, grâce à VFS
 * faire planter le système : `:(){:|:&};:`
 * `jobs -l` pour voir les PID. `fg 1` pour le remettre en premier plan
 
+## References
+
+* [Advanced Linux Programming](http://advancedlinuxprogramming.com/alp-folder/)
