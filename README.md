@@ -1,18 +1,18 @@
-# Unix/Linux : programmation system programming in C
+# Unix/Linux : programmation système en C
 
 ## 1) Compilation avec gcc
 
 Pour installer GCC : `apt-get install build-essential` || `yum groupinstall "Development tools"`
 
-4 étapes de la "compilation" :
+4 étapes de la "compilation" :  
 1. **preprocessing** : `gcc -E compil.c > compil.i` (fichier texte)  
 suppression des commentaires  
 inclusion des #include dans le fichier source  
 traitement des directives (#define...)  
-`-Wall` pour afficher les warnings, qui par défaut ne s'affichent pas
-2. **compilation** : transformation en assembleur : `gcc -S compil.i`
+`-Wall` pour afficher les warnings, qui par défaut ne s'affichent pas  
+2. **compilation** : transformation en assembleur : `gcc -S compil.i`  
 3. **assembling** : transformation du code assembleur en code machine binaire : `gcc -c compil.s` || `as -o compil.o compil.o`  
-`od -x compil.o` pour voir le contenu binaire || `objdump -t compil.o`
+`od -x compil.o` pour voir le contenu binaire || `objdump -t compil.o`  
 4. **linking** : après assembling, le code est incomplet, il n'a pas l'implémentation de toutes les fonctions (exemple printf, dont le code est dans une bibliothèque)  
 l'édition des liens va réunir le fichier objet et les fonctions contenues dans les bibliothèques, pour produire l'exécutable complet
 
