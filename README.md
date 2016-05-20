@@ -1,67 +1,66 @@
-Unix/Linux : system programming in C
+# Unix/Linux : programmation system programming in C
 
-# Compilation avec gcc
+## 1) Compilation avec gcc
 
 Pour installer GCC : `apt-get install build-essential` || `yum groupinstall "Development tools"`
 
 4 étapes de la "compilation" :
-1. **preprocessing** : `gcc -E compil.c > compil.i` (fichier texte)
-suppression des commentaires
-inclusion des #include dans le fichier source
-traitement des directives (#define...)
+1. **preprocessing** : `gcc -E compil.c > compil.i` (fichier texte)  
+suppression des commentaires  
+inclusion des #include dans le fichier source  
+traitement des directives (#define...)  
 `-Wall` pour afficher les warnings, qui par défaut ne s'affichent pas
 2. **compilation** : transformation en assembleur : `gcc -S compil.i`
-3. **assembling** : transformation du code assembleur en code machine binaire : `gcc -c compil.s` || `as -o compil.o compil.o`
+3. **assembling** : transformation du code assembleur en code machine binaire : `gcc -c compil.s` || `as -o compil.o compil.o`  
 `od -x compil.o` pour voir le contenu binaire || `objdump -t compil.o`
-4. **linking** : après assembling, le code est incomplet, il n'a pas l'implémentation de toutes les fonctions (exemple printf, dont le code est dans une bibliothèque)
+4. **linking** : après assembling, le code est incomplet, il n'a pas l'implémentation de toutes les fonctions (exemple printf, dont le code est dans une bibliothèque)  
 l'édition des liens va réunir le fichier objet et les fonctions contenues dans les bibliothèques, pour produire l'exécutable complet
 
-# Bibliothèques dynamiques et statiques
+## 2) Bibliothèques dynamiques et statiques
 
-bibliothèque standard : glibc. Elle contient 24 en-têtes
+Bibliothèque standard : `glibc`. Elle contient 24 en-têtes
 
-## Bibliothèques statiques (.a)
+### 2.1) Bibliothèques statiques (.a)
 
-pour compiler la bibliothèque : `gcc -c fic1.c fic2.c && ar rcs libfic.a fic1.o fic2.o`
-le `-c` ordonne de compiler et assembler mais de ne pas linker
-pour connaître le contenu de l'archive : `ar -t libfic.a`
+pour compiler la bibliothèque : `gcc -c fic1.c fic2.c && ar rcs libfic.a fic1.o fic2.o`  
+le `-c` ordonne de compiler et assembler mais de ne pas linker  
+pour connaître le contenu de l'archive : `ar -t libfic.a`  
 pour lister plus en détails le contenu de la librairie : `nm -s libfic.a`
 
-## Bibliothèques dynamiques/partagées (.so)
+### 2.2) Bibliothèques dynamiques/partagées (.so)
 
-pendant l'édition des liens, une portion de code est intégrée qui va pointer sur cette bibliothèque
-si fonction de la biblliothèque partagée appelée à plusieurs endroits, elle sera chargée qu'une seule fois en mémoire
-Linux sait gérer plusieurs versions d'une même bibliothèque en même temps
-.so[.version] dans `/lib/ /usr/lib/` (.dll sur Windows)
+pendant l'édition des liens, une portion de code est intégrée qui va pointer sur cette bibliothèque  
+si fonction de la biblliothèque partagée appelée à plusieurs endroits, elle sera chargée qu'une seule fois en mémoire  
+Linux sait gérer plusieurs versions d'une même bibliothèque en même temps  
+`.so[.version]` dans `/lib/ /usr/lib/` (.dll sur Windows)
 
-poour compiler la lib : `gcc -fPIC -shared -Wl,-soname,libfic.so.1 -o lib/libfic.so.1.0 fic01.c fic02.c`
-`-fPIC` pour que le code ne soit pas re-logeable
-`ln -sf libfic.so.1.0 libfic.so`
-ajouter le chemin du .so dans un nouveau fichier.conf dans `/etc/ld.so.conf.d/`, puis `ldconfig`
+poour compiler la lib : `gcc -fPIC -shared -Wl,-soname,libfic.so.1 -o lib/libfic.so.1.0 fic01.c fic02.c`  
+`-fPIC` pour que le code ne soit pas re-logeable  
+`ln -sf libfic.so.1.0 libfic.so`  
+ajouter le chemin du .so dans un nouveau fichier.conf dans `/etc/ld.so.conf.d/`, puis `ldconfig`  
 compiler le binaire utilisant la lib : `gcc -L./lib ficmain.c -o ficmain -lfic`
 
-pour connaître les bibliothèques qu'utilise un binaire : `ldd`
+pour connaître les bibliothèques qu'utilise un binaire : `ldd`  
 pour connaître les fonctions d'une lib : `objdump -T lib.so`
 
-# Language C
+### 2.3) Language C
 
 * `return EXIT_SUCCESS`
 * `#include<>` va chercher dans `/usr/include`, `#include ""` prend dans le répertoire actuel
-* que faut-il include pour printf ? `man 3 printf`
 
-# OS
+## 3) Système d'exploitation
 
-ensemble des programmes qui effectue l'interface entre le matériel de la machine et les utilisateurs
-il doit prendre en charge la gestion des ressources : partage de la machine physique et des ressources matérielles entre les différents programmes
-module : rajouter une fonction au noyau (.ko) dans `/lib/modules/`
-`lsmod` : afficher les modules chargés dans le système
+Ensemble des programmes qui effectuent l'interface entre le matériel de la machine et les utilisateurs  
+il doit prendre en charge la gestion des ressources : partage de la machine physique et des ressources matérielles entre les différents programmes  
+module : rajouter une fonction au noyau (.ko) dans `/lib/modules/`  
+`lsmod` : afficher les modules chargés dans le système  
 tous les drivers sont des modules
 
-# Processus, threads et ordonnancement
+## 4) Processus, threads et ordonnancement
+
+### 4.1) Processus
 
 Le processus classique est un processus lourd
-
-## Processus
 
 instance d'un programme exécutable
 processus : programme en cours d'exécution auquel est associé un environnement processeur (compteur ordinal, registre d'état, registres généraux) et un environnemnt mémoire appelés contexte du processus
@@ -95,7 +94,7 @@ le code exécuté remplace l'ancien code sur le même PID
 `main(   char **arge[])`: liste de pointeurs permettant d'accéder à l'environnement d'exécution du processus
 quand on fork, un nouveau processus est créé. Tout est copié. Nouvel adressage mémoire
 
-## Threads
+### 4.3) Threads
 
 Un processus est constitué d'un espace d'adressage avec un seul fil d'exécution  
 L'extension consiste à admettre plusieurs fils d'exécution indépendants dans un même espace d'adressage
@@ -119,20 +118,7 @@ threads niveau noyau: le noyau connaît l'existence des threads au sein d'un pro
 +: un thread en bloque pas un autre
 
 
-### en C
-
-bibliothèque Linux Threads, pas dans la glibc `#include "pthread.h"`, `-lpthreads` lors du linking. Thread de type `pthread_t`. `pthread_self()` pour connaître son identité
-`pthread_create()` : créer un Thread au sein du processus
-`pthread_exit()` : met fin au thread
-`pthread_join()` : jointure entre 2 threads. Attente que l'autre se termine (comme wait() pour les fork)
-
-attributs d'un thread:
-* adresse de départ et taile de la pile
-* politique d'ordonnancement
-* priorité
-* attachement ou détachement (un thread détaché se termine immédiatement sans pouvoir être pris en compte par la primitive `pthread_join()`
-
-## Ordonnancement
+### 4.4) Ordonnancement
 
 Son rôle est de gérer le partage du processeur entre les processus qui sont dans l'état prêt (opérations d'élection)
 ordonnancement préemptif: réquisition autorisée (transition de l'état élu vers l'état prêt). Aujourd'hui quasi tous les systèmes
@@ -150,7 +136,20 @@ un fils hérite de la priorité de son père et de la moitié des ticks
 
 L'ordonnancement réalisé par le noyau Linux est découpé en périodes. Au début de chaque période le système calcule le quantum de temps attribué à chaque processus
 
-### en C
+Au niveau utilisateur ce n'est pas le noyau qui ordonnances les threads, mais la bibliothèque POSIX thread
+
+### 4.5) C
+
+bibliothèque Linux Threads, pas dans la glibc `#include "pthread.h"`, `-lpthreads` lors du linking. Thread de type `pthread_t`. `pthread_self()` pour connaître son identité
+`pthread_create()` : créer un Thread au sein du processus
+`pthread_exit()` : met fin au thread
+`pthread_join()` : jointure entre 2 threads. Attente que l'autre se termine (comme wait() pour les fork)
+
+attributs d'un thread:
+* adresse de départ et taile de la pile
+* politique d'ordonnancement
+* priorité
+* attachement ou détachement (un thread détaché se termine immédiatement sans pouvoir être pris en compte par la primitive `pthread_join()`
 
 prototypes déclarés dans sched.h
 `int sched_setscheduler()` : modifie la politique d'ordonnacement policy du processus. Si PID NULL, processus courant concerné
@@ -160,6 +159,23 @@ prototypes déclarés dans sched.h
 si échec, retourne -1 et errno prend certaines valeurs
 `int nice(int inc)` : modifie la politesse du processus (colonne NI dans top)
 `int getpriority()` et `int setpriority()` permettent de lire et écrire la priorité d'un processus
+
+### 5)  Système de gestion de fichiers
+
+Les fichiers sont typéstypes de fichier:
+ll : ^p : pipe pour communiquer
+     ^s : socket
+`ifconfig`: obsolete => `ip addr`
+`netstat` obsolete => `ss`
+`nslookup` => `dig`
+
+pour avoir les infos sur un fichier : `stat`
+
+FS journalisé : avant de modifier les tables système, le pilote écrit sur disque les détails de la transaction dans un journal. En cas d'arrêt brutal, il suffit de compléter la transaction
+
+quel que soit le système de fichier c'est les mêmes primitives, grâce à VFS
+
+# Communication inter-processus : via pipe
 
 # sysadmin tips
 

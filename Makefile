@@ -7,7 +7,7 @@ INCLUDEDIR=inc
 LIBDIR=lib
 BINDIR=bin
 
-all: $(BINDIR)/args $(BINDIR)/calculer $(BINDIR)/calendar $(BINDIR)/dcl $(BINDIR)/exec $(BINDIR)/find $(BINDIR)/fork $(BINDIR)/parsec $(BINDIR)/pcalendar $(BINDIR)/procs $(BINDIR)/sort $(BINDIR)/tail $(BINDIR)/threads $(BINDIR)/zombie $(BINDIR)/ordo
+all: $(BINDIR)/args $(BINDIR)/calculer $(BINDIR)/calendar $(BINDIR)/dcl $(BINDIR)/exec $(BINDIR)/find $(BINDIR)/fork $(BINDIR)/parsec $(BINDIR)/pcalendar $(BINDIR)/procs $(BINDIR)/sort $(BINDIR)/tail $(BINDIR)/threads $(BINDIR)/zombie $(BINDIR)/ordo $(BINDIR)/files $(BINDIR)/dir
 
 # binaries
 
@@ -29,6 +29,9 @@ $(BINDIR)/tail: $(SRCDIR)/tail.c $(LIBDIR)/libgetline2.a
 $(BINDIR)/threads: $(SRCDIR)/threads.c
 	$(GCC) $(CFLAGS) -o $@ $^ -lpthread -I /usr/include
 
+$(BINDIR)/dir: $(SRCDIR)/dir.c
+	$(GCC) $(CFLAGS) -o $@ $^ 
+
 $(BINDIR)/ordo: $(SRCDIR)/ordo.c
 	$(GCC) $(CFLAGS) -o $@ $^ 
 
@@ -37,6 +40,9 @@ $(BINDIR)/procs: $(SRCDIR)/procs.c
 
 $(BINDIR)/zombie: $(SRCDIR)/zombie.c
 	$(GCC) $(CFLAGS) -o $@ $^ 
+
+$(BINDIR)/files: $(SRCDIR)/files.c
+	$(GCC) $(CFLAGS) -o $@ $^
 
 $(BINDIR)/args: $(SRCDIR)/args.c
 	$(GCC) $(CFLAGS) -o $@ $^
