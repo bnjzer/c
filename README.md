@@ -37,16 +37,16 @@ Linux sait gérer plusieurs versions d'une même bibliothèque en même temps
 poour compiler la lib : `gcc -fPIC -shared -Wl,-soname,libfic.so.1 -o lib/libfic.so.1.0 fic01.c fic02.c`  
 `-fPIC` pour que le code ne soit pas re-logeable  
 `ln -sf libfic.so.1.0 libfic.so`  
-ajouter le chemin du .so dans un nouveau fichier.conf dans `/etc/ld.so.conf.d/`, puis `ldconfig`  
+ajouter le chemin du .so dans un nouveau fichier .conf dans `/etc/ld.so.conf.d/`, puis `ldconfig`  
 compiler le binaire utilisant la lib : `gcc -L./lib ficmain.c -o ficmain -lfic`
 
-pour connaître les bibliothèques qu'utilise un binaire : `ldd`  
+pour connaître les bibliothèques partagées qu'utilise un binaire : `ldd`  
 pour connaître les fonctions d'une lib : `objdump -T lib.so`
 
 ### 2.3) C
 
-* `return EXIT_SUCCESS`
-* `#include<>` va chercher dans `/usr/include`, `#include ""` prend dans le répertoire actuel
+* `#include<>` va chercher dans `/usr/include`
+* `#include ""` va chercher dans le répertoire actuel
 
 ## 3) Système d'exploitation
 
@@ -213,6 +213,10 @@ c'ets le premier processus qui écrit dans le tube via write qui fixe la directi
 * lorsqu'on fait un `ps aux` les noms entre crochets sont des processus du noyau
 * faire planter le système : `:(){:|:&};:`
 * `jobs -l` pour voir les PID. `fg 1` pour le remettre en premier plan
+
+## 8) C tips
+
+* `return EXIT_SUCCESS`
 
 ## References
 
