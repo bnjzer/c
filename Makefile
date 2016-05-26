@@ -1,6 +1,6 @@
 GCC=gcc
 AR=ar rcs
-CFLAGS=-Wall
+CFLAGS=-Wall -g
 
 SRCDIR=src
 INCLUDEDIR=inc

@@ -6,6 +6,11 @@
 
 #define MAXWORD 100
 
+/*** preprocessior : 7
+ * comments_oneline : 3
+ * comments_severallines : 3 */
+/* string_constants : ****/
+
 struct key {
   char* word;
   int count;
@@ -23,6 +28,8 @@ struct key {
   {"while", 0}
 };
 
+int nbPreprocess = 0;
+
 #define NKEYS (sizeof keytab/sizeof keytab[0])
 
 int getword(char *, int);
@@ -33,19 +40,21 @@ int main(int argc, char **argv){
   int n;
   char word[MAXWORD];
 
+  word[0] = '\n';
+
   while(getword(word, MAXWORD) != EOF){
-    if(isalpha(word[0]))
+    if(isalpha(word[0])){
       if((n = binsearch(word, keytab, NKEYS)) >= 0)
         keytab[n].count++;
-    if(strcmp(word, "\n"))
-      printf("saut de ligne\n");
+    } 
   }
-  
+
   for(n=0; n < NKEYS; n++)
     if(keytab[n].count > 0)
       printf("%s: %d \n", keytab[n].word, keytab[n].count);
-  
-  size_t sizeInt = sizeof(int); 
+  printf("preprocessing: %d\n", nbPreprocess);
+
+  size_t sizeInt = sizeof(int);  // just to test _
   size_t sizeChar = sizeof(char);
   printf("size of int : %ld\n", sizeInt);
   printf("size of char : %ld\n", sizeChar);
@@ -74,13 +83,24 @@ int binsearch(char *word, struct key tab[], int n){
   return -1;
 }
 
+// skip spaces, returns the first symbol, and if first symbol is letter returns all following letters/numbers
 int getword(char *word, int lim){
   int c;
   char *w = word;
 
-  while(isspace(c = getch()))
+  while(isblank(c = getch()))
     ;
-  
+
+  if(*w == '\n'){
+    if(c == '#'){
+      while((c = getch()) != '\n')
+        ;
+      ungetch(c);
+      nbPreprocess++;
+      return word[0];
+    }
+  }
+
   if(c != EOF){
     *w++ = c;
   }
@@ -91,7 +111,7 @@ int getword(char *word, int lim){
   }
 
   for( ; --lim > 0; w++){
-    if(!isalnum(*w = getch())){
+    if(!(isalnum(*w = getch()) || *w == '_')){
       ungetch(*w);
       break;
     }
@@ -100,5 +120,3 @@ int getword(char *word, int lim){
   *w = '\0';
   return word[0];
 }
-
-// TODO: properly handle _, string constants, comments, preprocessor lines
