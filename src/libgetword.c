@@ -10,7 +10,7 @@ int getword(char *word){
   int c;
   char *w = word;
 
-  while(isspace(c = getch()))
+  while(isblank(c = getch()))
     ;
 
   if(c != EOF){
