@@ -6,11 +6,6 @@
 
 #define MAXWORD 100
 
-/*** preprocessior : 7
- * comments_oneline : 3
- * comments_severallines : 3 */
-/* string_constants : ****/
-
 struct key {
   char* word;
   int count;
@@ -29,11 +24,21 @@ struct key {
 };
 
 int nbPreprocess = 0;
+int nbOneLineComments = 0;
+int nbSeveralLineComments = 0;
+int nbStringConstants = 0;
+
+// hmm
 
 #define NKEYS (sizeof keytab/sizeof keytab[0])
 
 int getword(char *, int);
-int binsearch(char *, struct key *, int);
+int binsearch(char *, struct key *, int); /* blabla */
+
+/**** this 
+ * is 
+ * the  
+ * main *******/
 
 int main(int argc, char **argv){
 
@@ -53,6 +58,9 @@ int main(int argc, char **argv){
     if(keytab[n].count > 0)
       printf("%s: %d \n", keytab[n].word, keytab[n].count);
   printf("preprocessing: %d\n", nbPreprocess);
+  printf("comments one line: %d\n", nbOneLineComments);
+  printf("comments several line: %d\n", nbSeveralLineComments);
+  printf("string constants: %d\n", nbStringConstants);
 
   size_t sizeInt = sizeof(int);  // just to test _
   size_t sizeChar = sizeof(char);
@@ -101,11 +109,38 @@ int getword(char *word, int lim){
     }
   }
 
+  if(c == '/'){
+    if((c=getch()) == '/'){
+      while((c = getch()) != '\n')
+        ;
+      nbOneLineComments++;
+      return word[0];
+    } else if(c == '*'){
+      int commentGoing = 1;
+      while(commentGoing){
+        while((c=getch()) != '*')
+          ;
+        if((c=getch()) == '/') {
+          nbSeveralLineComments++;
+          return word[0];
+        } else
+          ungetch(c);
+      }
+    }
+  }
+
+  if(c == '"'){
+    while((c=getch()) != '"')
+      ;
+    nbStringConstants++;
+    return word[0];
+  }
+
   if(c != EOF){
     *w++ = c;
   }
 
-  if(!isalpha(c)) {
+  if(!isalpha(c)) { // hiiii
     *w = '\0';
     return c;
   }
