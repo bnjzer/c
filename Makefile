@@ -7,9 +7,12 @@ INCLUDEDIR=inc
 LIBDIR=lib
 BINDIR=bin
 
-all: $(BINDIR)/args $(BINDIR)/calculer $(BINDIR)/calendar $(BINDIR)/dcl $(BINDIR)/exec $(BINDIR)/find $(BINDIR)/fork $(BINDIR)/parsec $(BINDIR)/pcalendar $(BINDIR)/procs $(BINDIR)/sort $(BINDIR)/tail $(BINDIR)/threads $(BINDIR)/zombie $(BINDIR)/ordo $(BINDIR)/files $(BINDIR)/dir $(BINDIR)/ipc $(BINDIR)/ipc2ways $(BINDIR)/namedpipe1 $(BINDIR)/namedpipe2
+all: $(BINDIR)/args $(BINDIR)/calculer $(BINDIR)/calendar $(BINDIR)/dcl $(BINDIR)/exec $(BINDIR)/find $(BINDIR)/fork $(BINDIR)/parsec $(BINDIR)/pcalendar $(BINDIR)/procs $(BINDIR)/sort $(BINDIR)/tail $(BINDIR)/threads $(BINDIR)/zombie $(BINDIR)/ordo $(BINDIR)/files $(BINDIR)/dir $(BINDIR)/ipc $(BINDIR)/ipc2ways $(BINDIR)/namedpipe1 $(BINDIR)/namedpipe2 $(BINDIR)/wordcount
 
 # binaries
+
+$(BINDIR)/wordcount: $(SRCDIR)/wordcount.c $(LIBDIR)/libgetword.a 
+	$(GCC) $(CFLAGS) -o $@ $^ -I $(INCLUDEDIR)
 
 $(BINDIR)/parsec: $(SRCDIR)/parsec.c $(LIBDIR)/libgetch.a 
 	$(GCC) $(CFLAGS) -o $@ $^ -I $(INCLUDEDIR)
@@ -75,6 +78,10 @@ $(BINDIR)/calculer: $(SRCDIR)/calculer.c
 	$(GCC) $(CFLAGS) -o $@ $^
 
 # libraries
+
+$(LIBDIR)/libgetword.a: $(SRCDIR)/libgetword.c $(LIBDIR)/libgetch.a
+	$(GCC) $(CFLAGS) -c $(SRCDIR)/libgetword.c -o $(SRCDIR)/libgetword.o -I $(INCLUDEDIR)
+	$(AR) $@ $(SRCDIR)/libgetword.o 
 
 $(LIBDIR)/libgetch.a: $(SRCDIR)/libgetch.c
 	$(GCC) $(CFLAGS) -c $^ -o $(SRCDIR)/libgetch.o
