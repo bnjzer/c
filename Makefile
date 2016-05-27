@@ -80,8 +80,8 @@ $(BINDIR)/calculer: $(SRCDIR)/calculer.c
 # libraries
 
 $(LIBDIR)/libgetword.a: $(SRCDIR)/libgetword.c $(LIBDIR)/libgetch.a
-	$(GCC) $(CFLAGS) -c $(SRCDIR)/libgetword.c -o $(SRCDIR)/libgetword.o -I $(INCLUDEDIR)
-	$(AR) $@ $(SRCDIR)/libgetword.o 
+	$(GCC) $(CFLAGS) -c $< -o $(SRCDIR)/libgetword.o -I $(INCLUDEDIR)
+	$(AR) $@ $(SRCDIR)/libgetword.o $(SRCDIR)/libgetch.o 
 
 $(LIBDIR)/libgetch.a: $(SRCDIR)/libgetch.c
 	$(GCC) $(CFLAGS) -c $^ -o $(SRCDIR)/libgetch.o
