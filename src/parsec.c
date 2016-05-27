@@ -33,7 +33,7 @@ int nbStringConstants = 0;
 #define NKEYS (sizeof keytab/sizeof keytab[0])
 
 int getword(char *, int);
-int binsearch(char *, struct key *, int); /* blabla */
+struct key *binsearch(char *, struct key *, int); /* blabla */
 
 /**** this 
  * is 
@@ -42,45 +42,43 @@ int binsearch(char *, struct key *, int); /* blabla */
 
 int main(int argc, char **argv){
 
-  int n;
   char word[MAXWORD];
+  struct key *p;
 
   word[0] = '\n';
 
   while(getword(word, MAXWORD) != EOF){
     if(isalpha(word[0])){
-      if((n = binsearch(word, keytab, NKEYS)) >= 0)
-        keytab[n].count++;
+      if((p = binsearch(word, keytab, NKEYS)) != NULL)
+        p->count++;
     } 
   }
 
-  for(n=0; n < NKEYS; n++)
-    if(keytab[n].count > 0)
-      printf("%s: %d \n", keytab[n].word, keytab[n].count);
+  for(p=keytab; p < keytab + NKEYS; p++)
+    if(p->count > 0)
+      printf("%s: %d \n", p->word, p->count);
   printf("preprocessing: %d\n", nbPreprocess);
   printf("comments one line: %d\n", nbOneLineComments);
   printf("comments several line: %d\n", nbSeveralLineComments);
   printf("string constants: %d\n", nbStringConstants);
 
-  size_t sizeInt = sizeof(int);  // just to test _
-  size_t sizeChar = sizeof(char);
-  printf("size of int : %ld\n", sizeInt);
-  printf("size of char : %ld\n", sizeChar);
+  size_t keytabElt = sizeof(keytab[0]);
+  printf("size of keytab element : %ld\n", keytabElt);
 
   return 0;
 }
 
-int binsearch(char *word, struct key tab[], int n){
+struct key * binsearch(char *word, struct key *tab, int n){
   int cond;
-  int low, high, mid;
+  struct key *low, *high, *mid;
 
-  low = 0;
-  high = n-1;
+  low = &tab[0];
+  high = &tab[n];
 
-  while(low <= high){
-    mid = (low + high) / 2;
-    if((cond = strcmp(word, tab[mid].word)) < 0){
-      high = mid - 1;
+  while(low < high){
+    mid = low + (high - low) / 2;
+    if((cond = strcmp(word, mid->word)) < 0){
+      high = mid;
     } else if(cond > 0){
       low = mid + 1;
     } else {
@@ -88,7 +86,7 @@ int binsearch(char *word, struct key tab[], int n){
     }
   }
 
-  return -1;
+  return NULL;
 }
 
 // skip spaces, returns the first symbol, and if first symbol is letter returns all following letters/numbers
