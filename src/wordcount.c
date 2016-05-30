@@ -20,6 +20,7 @@ struct tnode *talloc(void);
 char *strdup2(char *);
 struct tnode *addtree(struct tnode *, char *, int);
 void treeprint(struct tnode *);
+struct tnode *sortTree(struc tnode *sortedTree, struc tnode *root);
 
 int main(int argc, char **argv){
   struct tnode *root;
@@ -31,9 +32,10 @@ int main(int argc, char **argv){
     if(*word == '\n')
       nLine++;
     if(isalpha(word[0]))
-      root = addtree(root, word, nLine);
+      root = sortTree(root, word, nLine);
   }
-  treeprint(root);
+  struc tnode *sortedTree = sortTree(sortedTree, root);
+  treeprint(sortedTree);
 
   return 0;
 }
@@ -86,4 +88,13 @@ void treeprint(struct tnode *p){
     printf("\n");
     treeprint(p->right);
   }
+}
+
+struc tnode *sortTree(struc tnode *root){
+  struct tnode *sortedTree = NULL;
+
+
+  add(res, root);
+
+  return res;
 }
