@@ -7,7 +7,7 @@ INCLUDEDIR=inc
 LIBDIR=lib
 BINDIR=bin
 
-all: $(BINDIR)/args $(BINDIR)/calculer $(BINDIR)/calendar $(BINDIR)/dcl $(BINDIR)/exec $(BINDIR)/find $(BINDIR)/fork $(BINDIR)/parsec $(BINDIR)/pcalendar $(BINDIR)/procs $(BINDIR)/sort $(BINDIR)/tail $(BINDIR)/threads $(BINDIR)/zombie $(BINDIR)/ordo $(BINDIR)/files $(BINDIR)/dir $(BINDIR)/ipc $(BINDIR)/ipc2ways $(BINDIR)/namedpipe1 $(BINDIR)/namedpipe2 $(BINDIR)/wordcount $(BINDIR)/define
+all: $(BINDIR)/args $(BINDIR)/calculer $(BINDIR)/calendar $(BINDIR)/dcl $(BINDIR)/exec $(BINDIR)/find $(BINDIR)/fork $(BINDIR)/parsec $(BINDIR)/pcalendar $(BINDIR)/procs $(BINDIR)/sort $(BINDIR)/tail $(BINDIR)/threads $(BINDIR)/zombie $(BINDIR)/ordo $(BINDIR)/files $(BINDIR)/dir $(BINDIR)/ipc $(BINDIR)/ipc2ways $(BINDIR)/namedpipe1 $(BINDIR)/namedpipe2 $(BINDIR)/wordcount $(BINDIR)/define $(BINDIR)/lowerUpper
 
 # binaries
 
@@ -34,6 +34,9 @@ $(BINDIR)/tail: $(SRCDIR)/tail.c $(LIBDIR)/libgetline2.a
 
 $(BINDIR)/threads: $(SRCDIR)/threads.c
 	$(GCC) $(CFLAGS) -o $@ $^ -lpthread -I /usr/include
+
+$(BINDIR)/lowerUpper: $(SRCDIR)/lowerUpper.c
+	$(GCC) $(CFLAGS) -o $@ $^ 
 
 $(BINDIR)/ipc2ways: $(SRCDIR)/ipc2ways.c
 	$(GCC) $(CFLAGS) -o $@ $^ 
