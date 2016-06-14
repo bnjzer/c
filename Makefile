@@ -47,6 +47,12 @@ $(BINDIR)/namedpipe2: $(SRCDIR)/namedpipe2.c
 $(BINDIR)/namedpipe1: $(SRCDIR)/namedpipe1.c
 	$(GCC) $(CFLAGS) -o $@ $^ 
 
+$(BINDIR)/sscanf: $(SRCDIR)/sscanf.c
+	$(GCC) $(CFLAGS) -o $@ $^ 
+
+$(BINDIR)/va_arg: $(SRCDIR)/va_arg.c
+	$(GCC) $(CFLAGS) -o $@ $^ 
+
 $(BINDIR)/ipc: $(SRCDIR)/ipc.c
 	$(GCC) $(CFLAGS) -o $@ $^ 
 
