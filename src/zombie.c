@@ -1,3 +1,5 @@
+/* a zombie is a process that ended its execution and is waiting for its father to take it into account */
+
 #include<stdio.h>
 #include<unistd.h>
 #include<sys/types.h>

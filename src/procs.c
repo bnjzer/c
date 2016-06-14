@@ -1,3 +1,6 @@
+/* process = instance of an executable program */
+
+
 #include<stdio.h>
 #include<unistd.h>
 #include <sys/wait.h>
