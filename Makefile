@@ -7,9 +7,12 @@ INCLUDEDIR=inc
 LIBDIR=lib
 BINDIR=bin
 
-all: $(BINDIR)/args $(BINDIR)/calculer $(BINDIR)/calendar $(BINDIR)/dcl $(BINDIR)/exec $(BINDIR)/find $(BINDIR)/fork $(BINDIR)/parsec $(BINDIR)/pcalendar $(BINDIR)/procs $(BINDIR)/sort $(BINDIR)/tail $(BINDIR)/threads $(BINDIR)/zombie $(BINDIR)/ordo $(BINDIR)/files $(BINDIR)/dir $(BINDIR)/ipc $(BINDIR)/ipc2ways $(BINDIR)/namedpipe1 $(BINDIR)/namedpipe2 $(BINDIR)/wordcount $(BINDIR)/define $(BINDIR)/lowerUpper $(BINDIR)/cat $(BINDIR)/diff $(BINDIR)/cat_syscalls
+all: $(BINDIR)/args $(BINDIR)/calculer $(BINDIR)/calendar $(BINDIR)/dcl $(BINDIR)/exec $(BINDIR)/find $(BINDIR)/fork $(BINDIR)/parsec $(BINDIR)/pcalendar $(BINDIR)/procs $(BINDIR)/sort $(BINDIR)/tail $(BINDIR)/threads $(BINDIR)/zombie $(BINDIR)/ordo $(BINDIR)/files $(BINDIR)/dir $(BINDIR)/ipc $(BINDIR)/ipc2ways $(BINDIR)/namedpipe1 $(BINDIR)/namedpipe2 $(BINDIR)/wordcount $(BINDIR)/define $(BINDIR)/lowerUpper $(BINDIR)/cat $(BINDIR)/diff $(BINDIR)/cat_syscalls $(BINDIR)/fopen
 
 # binaries
+
+$(BINDIR)/fopen : $(SRCDIR)/fopen.c
+	$(GCC) $(CFLAGS) -o $@ $^
 
 $(BINDIR)/cat_syscalls : $(SRCDIR)/cat_syscalls.c
 	$(GCC) $(CFLAGS) -o $@ $^
