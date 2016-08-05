@@ -38,6 +38,8 @@ FILE _iob[OPEN_MAX] = {
 
 int _fillbuff(FILE*);
 int _flushbuf(int, FILE*);
+int fflush(FILE*);
+int fclose(FILE*);
 
 #define feof(p) (((p)->flag & _EOF) != 0)
 #define ferror(p) (((p)->flag & _ERR) != 0)
@@ -58,11 +60,11 @@ FILE *fopen(char *name, char *mode){
   int fd;
   FILE *fp;
 
-  if (*mode != 'r' && *mode != 'a' && *mode != 'r')
+  if (*mode != 'r' && *mode != 'a' && *mode != 'w')
     return NULL;
 
   for (fp = _iob; fp < _iob + OPEN_MAX; fp++)
-    if (fp->flags.readable ||  fp->flags.writable)
+    if (fp->flags.readable || fp->flags.writable)
       break;
 
   if (fp >= _iob + OPEN_MAX)
@@ -117,13 +119,75 @@ int _fillbuf(FILE *fp){
   return (unsigned char) *fp->ptr++;
 }
 
+/* empties buffer in the output file and add c to buffer*/
+int _flushbuf(int c, FILE* f){
+  if (!f->flags.writable || f->flags.eof || f->flags.error)
+    return EOF;
+
+  int bufsize;
+  bufsize = f->flags.unbuffered ? 1 : BUFSIZE;
+
+  if(f->base == NULL){ // no buffer yet
+    if((f->base = (char*) malloc(bufsize)) == NULL)
+      return EOF; // can't allocate memory
+  } else
+    fflush(f);
+
+  *f->ptr++ = c;
+  f->cnt--;
+
+  return c;
+}
+
+/* if reading, discard buffer, if writing, write buffer to file */
+int fflush(FILE *f){
+  if (f->flags.eof || f->flags.error)
+    return EOF;
+
+  if (f->flags.readable){
+    f->ptr = f->base;
+    f->cnt = 0;
+  } else if (f->flags.writable) {
+    int c;
+      if ((c = write(f->fd, f->ptr, f->cnt)) != f->cnt){
+        printf("error: bad number of characters written\n");
+        return EOF;
+      }
+  } else {
+    printf("error: can't flush file because it's not readable nor writable\n");
+    return -1;
+  }
+
+  return 0;
+}
+
+/* flush buffer, free space, and close file descriptor */
+int fclose(FILE *f){
+  fflush(f);
+  free(f->base);
+}
+
 int main(int argc, char **argv){
   FILE *f;
+  char c;
+
   f = fopen("/tmp/toto", "r");
-  if (f == NULL)
+  if (f == NULL) 
     printf("An error occured while opening file\n");
   else
-    _fillbuf(f);
+    while ((c = getc(f)) != EOF)
+      printf("%c", c);
+  fclose(f);
+
+  f = fopen("/tmp/titi", "w");
+  if (f == NULL)
+    printf("An error occured while opening file\n");
+  else {
+    char s[] = "hello\nworld";
+    while(s != '\0')
+      putc('a', f);
+    fclose(f);
+  }
 
   return 0;
 }
